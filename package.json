@@ -1,0 +1,19 @@
+{
+  "name": "quotes-api",
+  "version": "1.0.0",
+  "description": "api for quotes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KatsFahad/quotes-api.git"
+  },
+  "author": "Katemba Fahad",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KatsFahad/quotes-api/issues"
+  },
+  "homepage": "https://github.com/KatsFahad/quotes-api#readme"
+}
