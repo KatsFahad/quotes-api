@@ -34,9 +34,10 @@ quotesRouter.get('/:id', (req,res)=>{
         if(err){
             res.send('Failed to get Quote Data')
         }else{
-            const quote = data.find(q=> q.id === parseInt(req.params.id))
+            const quotes = JSON.parse(data)
+            const quote = quotes.find(q=> q.id === parseInt(req.params.id))
             if(quote){
-                res.json(JSON.parse(quote))
+                res.json(quote)
             }else{
                 res.send('No quote for that id for found')
             }

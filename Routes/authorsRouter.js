@@ -28,7 +28,24 @@ authorsRouter.post('/', (req,res)=>{
     })
 })
 
-authorsRouter.get('/:idNo', (req,res)=>{
+authorsRouter.get('/:id', (req,res)=>{
+    fs.readFile('./Modules/quotes.json', 'utf8', (err, data)=>{
+        if(err){
+            res.send('Failed to get Quote Data')
+        }else{
+            const authors = JSON.parse(data)
+            const author = authors.find(a=> a.id === parseInt(req.params.id))
+            if(author){
+                res.json(author)
+            }else{
+                res.send('No Author for that id for found')
+            }
+        }
+
+    })
+})
+
+authorsRouter.delete('/:idNo', (req,res)=>{
     const id = req.params.idNo
     fs.readFile('./Modules/authors.json', (err, data)=>{
         if(err){
@@ -41,19 +58,6 @@ authorsRouter.get('/:idNo', (req,res)=>{
             }else{
                 res.send('No author by that id')
             }
-            }
-        
-    })
-})
-
-authorsRouter.delete('/:idNo', (req,res)=>{
-    const id = req.params.id
-    fs.readFile('./Modules/authors.json', (err, data)=>{
-        if(err){
-            res.send('Failed to get the specific data for authour')
-        }else{
-            const updatedAthours = data.filter(authour => authour.id !== id);
-            res.send('deleted author')
             }
         
     })
