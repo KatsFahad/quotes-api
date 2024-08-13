@@ -1,6 +1,7 @@
 const express = require('express')
 const quotesRouter = express.Router()
 const fs = require('fs')
+const { parse } = require('path')
 
 quotesRouter.get('/', (req,res)=>{
     fs.readFile('./Modules/quotes.json', 'utf8', (err, data)=>{
@@ -28,21 +29,19 @@ quotesRouter.post('/', (req,res)=>{
     })
 })
 
-quotesRouter.get('/:idNo', (req,res)=>{
-    const id = req.params.idNo
-    fs.readFile('./Modules/authors.json', (err, data)=>{
+quotesRouter.get('/:id', (req,res)=>{
+    fs.readFile('./Modules/quotes.json', 'utf8', (err, data)=>{
         if(err){
-            res.send('Failed to get the specific data for quote')
+            res.send('Failed to get Quote Data')
         }else{
-            const quote = data.find(q=> q.id === id);
+            const quote = data.find(q=> q.id === parseInt(req.params.id))
             if(quote){
-                console.log(quote)
-                res.send(quote)
+                res.json(JSON.parse(quote))
             }else{
-                res.send('No quote by that id')
+                res.send('No quote for that id for found')
             }
-            }
-        
+        }
+
     })
 })
 
@@ -52,7 +51,7 @@ quotesRouter.delete('/:idNo', (req,res)=>{
         if(err){
             res.send('Failed to get the specific data for quote')
         }else{
-            const updatedAthours = data.filter(q => q.id !== id);
+            const updatedQuotes = data.filter(q => q.id !== id);
             res.send('deleted quote')
             }
         
