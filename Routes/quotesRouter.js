@@ -46,16 +46,34 @@ quotesRouter.get('/:id', (req,res)=>{
     })
 })
 
-quotesRouter.delete('/:idNo', (req,res)=>{
-    const id = req.params.id
-    fs.readFile('./Modules/authors.json', (err, data)=>{
+quotesRouter.delete('/:id', (req,res)=>{
+    fs.readFile('./Modules/quotes.json', 'utf8', (err, data)=>{
         if(err){
-            res.send('Failed to get the specific data for quote')
+            res.send('Failed to get Quote Data')
         }else{
-            const updatedQuotes = data.filter(q => q.id !== id);
-            res.send('deleted quote')
+            const quotes = JSON.parse(data)
+            const updatedQuotes = quotes.filter(q => q.id !== req.params.id);
+            res.send('Quote deleted')
+        }
+    })
+    
+})
+
+quotesRouter.put('/:id', (req, res)=>{
+    fs.readFile('./Modules/quotes.json', 'utf8', (err, data)=>{
+        if(err){
+            res.send('Failed to get Quote Data')
+        }else{
+            const quotes = JSON.parse(data)
+            const quote = quotes.find(q=> q.id === parseInt(req.params.id))
+            if(quote){
+                quote.name = req.body.name
+                res.json(quote)
+            }else{
+                res.send('No Quote for that id for found')
             }
-        
+        }
+
     })
 })
 

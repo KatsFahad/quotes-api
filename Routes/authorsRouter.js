@@ -15,7 +15,7 @@ authorsRouter.get('/', (req,res)=>{
 authorsRouter.post('/', (req,res)=>{
     fs.readFile('./Modules/authors.json', 'utf8', (err, data)=>{
         if(err){
-            res.send('Failed to quotes')
+            res.send('Failed to authors')
         }else{
             fs.writeFile('./Modules/authors.json', JSON.stringify([...JSON.parse(data),req.body],null,2), (err)=>{
                 if(err){
@@ -29,9 +29,9 @@ authorsRouter.post('/', (req,res)=>{
 })
 
 authorsRouter.get('/:id', (req,res)=>{
-    fs.readFile('./Modules/quotes.json', 'utf8', (err, data)=>{
+    fs.readFile('./Modules/authors.json', 'utf8', (err, data)=>{
         if(err){
-            res.send('Failed to get Quote Data')
+            res.send('Failed to get Author Data')
         }else{
             const authors = JSON.parse(data)
             const author = authors.find(a=> a.id === parseInt(req.params.id))
@@ -45,22 +45,36 @@ authorsRouter.get('/:id', (req,res)=>{
     })
 })
 
-authorsRouter.delete('/:idNo', (req,res)=>{
-    const id = req.params.idNo
-    fs.readFile('./Modules/authors.json', (err, data)=>{
+authorsRouter.delete('/:id', (req,res)=>{
+    fs.readFile('./Modules/authors.json', 'utf8', (err, data)=>{
         if(err){
-            res.send('Failed to get the specific data for authour')
+            res.send('Failed to get Author Data')
         }else{
-            const author = data.find(a=> a.id === id);
+            const authors = JSON.parse(data)
+            const updatedAthours = authors.filter(a => a.id !== req.params.id);
+            res.send('Author deleted')
+        }
+    })
+    
+})
+
+authorsRouter.put('/:id', (req, res)=>{
+    fs.readFile('./Modules/authors.json', 'utf8', (err, data)=>{
+        if(err){
+            res.send('Failed to get Author Data')
+        }else{
+            const authors = JSON.parse(data)
+            const author = authors.find(a=> a.id === parseInt(req.params.id))
             if(author){
-                console.log(author)
-                res.send(author)
+                author.name = req.body.name
+                res.json(author)
             }else{
-                res.send('No author by that id')
+                res.send('No Author for that id for found')
             }
-            }
-        
+        }
+
     })
 })
+
 
 module.exports = authorsRouter
