@@ -65,10 +65,10 @@ quotesRouter.put('/:id', (req, res)=>{
             res.send('Failed to get Quote Data')
         }else{
             const quotes = JSON.parse(data)
-            const quote = quotes.find(q=> q.id === parseInt(req.params.id))
-            if(quote){
-                quote.name = req.body.name
-                res.json(quote)
+            const UpdateQuote = quotes.find(q=> q.id === parseInt(req.params.id))
+            if(UpdateQuote){
+                UpdateQuote.name = req.body.name
+                res.json('Quote updated')
             }else{
                 res.send('No Quote for that id for found')
             }

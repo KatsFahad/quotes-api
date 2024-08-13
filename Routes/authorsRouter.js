@@ -64,12 +64,12 @@ authorsRouter.put('/:id', (req, res)=>{
             res.send('Failed to get Author Data')
         }else{
             const authors = JSON.parse(data)
-            const author = authors.find(a=> a.id === parseInt(req.params.id))
-            if(author){
-                author.name = req.body.name
-                res.json(author)
+            const UpdateAuthor = authors.find(q=> q.id === parseInt(req.params.id))
+            if(UpdateAuthor){
+                UpdateAuthor.name = req.body.name
+                res.json('Author updated')
             }else{
-                res.send('No Author for that id for found')
+                res.send('No author for that id for found')
             }
         }
 
