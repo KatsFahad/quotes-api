@@ -1,7 +1,7 @@
 const fs = require('fs')
 
-const getQuotes = (req,res)=>{
-    fs.readFile('./Modules/quote.json', (err, data)=>{
+const getAllQuotes = (req,res)=>{
+    fs.readFile('./Modules/quotes.json', 'utf8', (err, data)=>{
         if(err){
             res.send('Failed to quotes')
         }else{
@@ -10,4 +10,74 @@ const getQuotes = (req,res)=>{
     })
 }
 
-module.exports = getQuotes
+const createNewQuote = (req,res)=>{
+    fs.readFile('./Modules/quotes.json', 'utf8', (err, data)=>{
+        if(err){
+            res.send('Failed to quotes')
+        }else{
+            fs.writeFile('./Modules/quotes.json', JSON.stringify([...JSON.parse(data),req.body],null,2), (err)=>{
+                if(err){
+                    res.send('Failed to a Quote')
+                }else{
+                    res.send('Quote added Successfully')
+                }
+            })
+        }
+    })
+}
+
+const getQuoteById = (req,res)=>{
+    fs.readFile('./Modules/quotes.json', 'utf8', (err, data)=>{
+        if(err){
+            res.send('Failed to get Quote Data')
+        }else{
+            const quotes = JSON.parse(data)
+            const quote = quotes.find(q=> q.id === parseInt(req.params.id))
+            if(quote){
+                res.json(quote)
+            }else{
+                res.send('No quote for that id for found')
+            }
+        }
+
+    })
+}
+
+const deleteQuoteById = (req,res)=>{
+    fs.readFile('./Modules/quotes.json', 'utf8', (err, data)=>{
+        if(err){
+            res.send('Failed to get Quote Data')
+        }else{
+            const quotes = JSON.parse(data)
+            const updatedQuotes = quotes.filter(q => q.id !== req.params.id);
+            res.send('Quote deleted')
+        }
+    })
+    
+}
+
+const updateQuoteById = (req, res)=>{
+    fs.readFile('./Modules/quotes.json', 'utf8', (err, data)=>{
+        if(err){
+            res.send('Failed to get Quote Data')
+        }else{
+            const quotes = JSON.parse(data)
+            const UpdateQuote = quotes.find(q=> q.id === parseInt(req.params.id))
+            if(UpdateQuote){
+                UpdateQuote.name = req.body.name
+                res.json('Quote updated')
+            }else{
+                res.send('No Quote for that id for found')
+            }
+        }
+
+    })
+}
+
+module.exports = {
+    getAllQuotes,
+    createNewQuote,
+    getQuoteById,
+    deleteQuoteById,
+    updateQuoteById
+}
