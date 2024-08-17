@@ -73,12 +73,19 @@ const updateQuoteById = (req, res)=>{
             res.send('Failed to get Quote Data')
         }else{
             const quotes = JSON.parse(data)
-            const UpdateQuote = quotes.find(q=> q.id === parseInt(req.params.id))
-            if(UpdateQuote){
-                UpdateQuote.name = req.body.name
-                res.json('Quote updated')
+            const quoteIndex  = quotes.findIndex(q=> q.id === parseInt(req.params.id))
+            if(quoteIndex === -1){
+                res.send('Failed to get author with that id')
             }else{
-                res.send('No Quote for that id for found')
+                const dataToUpdate = req.body
+                quotes[quoteIndex] = { ...quotes[quoteIndex], ...dataToUpdate};
+                fs.writeFile('./Modules/quotes.json', JSON.stringify(quotes, null, 2), (err)=>{
+                    if(err){
+                        res.send('Failed to update the quote with that id')
+                    }else{
+                        res.send('Quote updated')
+                    }
+                })
             }
         }
 

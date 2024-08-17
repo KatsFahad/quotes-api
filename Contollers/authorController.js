@@ -72,13 +72,19 @@ const updateAuthorById = (req, res)=>{
             res.send('Failed to get Author Data')
         }else{
             const authors = JSON.parse(data)
-            const UpdateAuthor = authors.find(q=> q.id === parseInt(req.params.id))
-            if(UpdateAuthor){
-                UpdateAuthor.name = req.body.name
-                console.log(UpdateAuthor)
-                res.json('Author updated')
+            const authorIndex  = authors.findIndex(a=> a.id === parseInt(req.params.id))
+            if(authorIndex === -1){
+                res.send('Failed to get author with that id')
             }else{
-                res.send('No author for that id for found')
+                const dataToUpdate = req.body
+                authors[authorIndex] = { ...authors[authorIndex], ...dataToUpdate};
+                fs.writeFile('./Modules/authors.json', JSON.stringify(authors, null, 2), (err)=>{
+                    if(err){
+                        res.send('Failed to update the author with that id')
+                    }else{
+                        res.send('Author updated')
+                    }
+                })
             }
         }
 
