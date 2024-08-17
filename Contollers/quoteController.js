@@ -49,8 +49,19 @@ const deleteQuoteById = (req,res)=>{
             res.send('Failed to get Quote Data')
         }else{
             const quotes = JSON.parse(data)
-            const updatedQuotes = quotes.filter(q => q.id !== req.params.id);
-            res.send('Quote deleted')
+            const quoteIndex = quotes.findIndex(q=> q.id === parseInt(req.params.id))
+            if(quoteIndex === -1){
+                res.send('Failed to get quote with that id')
+            }else{
+                quotes.splice(quoteIndex, 1)
+                fs.writeFile('./Modules/quotes.json', JSON.stringify(quotes, null, 2), (err)=>{
+                    if(err){
+                        res.send('Failed to update quote data')
+                    }else{
+                        res.send('Quote deleted')
+                    }
+                })
+            }
         }
     })
     

@@ -49,19 +49,22 @@ const deleteAuthorById = (req,res)=>{
             res.send('Failed to get Author Data')
         }else{
             const authors = JSON.parse(data)
-            const authorToDelete = authors.find(a=> a.id === parseInt(req.params.id))
-            if(authorToDelete){
-                const index = authors.indexOf(authorToDelete)
-                authors.splice(index, 1)
-                res.send('Author deleted')
-            }
-            else{
-                res.send('No author for that id found')
+            authorIndex = authors.findIndex(a=> a.id === parseInt(req.params.id))
+            if(authorIndex === -1){
+                res.send('Author with that id not found')
+            }else{
+                authors.splice(authorIndex, 1)
+                fs.writeFile('./Modules/authors.json', JSON.stringify(authors, null, 2), (err)=>{
+                    if(err){
+                        res.send('Failed to update the author data')
+                    }else{
+                        res.send('Author deleted')
+                    }
+                })
             }
         }
-    })
-    
-}
+    }
+)}
 
 const updateAuthorById = (req, res)=>{
     fs.readFile('./Modules/authors.json', 'utf8', (err, data)=>{
